@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ImagePicker from "react-native-image-crop-picker";
 import { Icon } from "react-native-elements";
 import { InputComponent } from "../components/InputComponent";
+import SelectDropdown from "react-native-select-dropdown";
+import { categoryList } from "../../data/Data";
+import realm from "../../store/realm";
 
 const AddProductScreen = () => {
 
@@ -17,6 +20,8 @@ const AddProductScreen = () => {
     facebook: "",
     phoneNumber: "",
   });
+
+  const dropdownRef = useRef({})
 
   const addImage = () => {
     ImagePicker.openPicker({
@@ -37,6 +42,54 @@ const AddProductScreen = () => {
       [type]: value,
     });
   };
+
+  const saveData = () => {
+    if(!isProductDataValid()){
+      alert('Please fill all your product information!')
+    } else if(isSellerContactNotValid()){
+      alert('Please fill one of seller contact information!')
+    } else{
+      const allData = realm.objects('Product')
+      const lastId = allData.length === 0 ? 0 : allData[allData.length - 1].id
+
+      realm.write(()=>{
+        realm.create('Product', {
+          id: lastId + 1,
+          productName: productData.productName,
+          imagePath: productData.imagePath,
+          category: productData.category,
+          description: productData.description,
+          price: parseInt(productData.price),
+          instagram: productData.instagram,
+          facebook: productData.facebook,
+          phoneNumber: productData.phoneNumber
+        })
+      })
+
+      setProductData({
+        productName: "",
+        imagePath: "",
+        category: null,
+        description: "",
+        price: null,
+        instagram: "",
+        facebook: "",
+        phoneNumber: "",
+      })
+
+      dropdownRef.current.reset();
+
+      console.log(realm.objects('Product'))
+    }
+  }
+
+  const isProductDataValid = () =>{
+    return productData.productName !== '' && productData.imagePath !== '' && productData.price !== null && productData.description !== '' && productData.category !== null
+  }
+
+  const isSellerContactNotValid = () => {
+    return productData.instagram === "" && productData.facebook === "" && productData.phoneNumber === ""
+  }
 
   useEffect(() => {
     console.log(productData);
@@ -64,6 +117,16 @@ const AddProductScreen = () => {
             value={productData.productName}
             onChangeText={(text) =>
               onInputChange("productName", text)}
+          />
+          <SelectDropdown data={categoryList}
+                          onSelect={(item)=>{onInputChange('category', item.id)}}
+                          defaultButtonText={'Select Category'}
+                          buttonTextAfterSelection={(item)=>item.name}
+                          rowTextForSelection={(item)=>item.name}
+                          buttonStyle={styles.selectDropdown}
+                          buttonTextStyle={styles.selectText}
+                          ref={dropdownRef}
+
           />
         </View>
         <View style={styles.horizontalContainer}>
@@ -112,6 +175,7 @@ const AddProductScreen = () => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.saveButton}
+            onPress={()=>saveData()}
           >
             <Text style={styles.saveText}>SAVE</Text>
           </TouchableOpacity>
@@ -169,6 +233,16 @@ const styles = StyleSheet.create({
   saveText: {
     color: "black",
   },
+  selectDropdown: {
+    borderRadius: 10,
+    backgroundColor: 'skyblue',
+  width: 150,
+    height: 30,
+    marginLeft: 8
+  },
+  selectText: {
+    fontSize: 12
+  }
 });
 
 export default AddProductScreen;

@@ -12,7 +12,7 @@ export const InputComponent = (props) =>{
       }
       <TextInput style={[
         styles.input, {height: isDescription ? 100: 40, color: 'black'}
-      ]} multiline={true} {...props} placeholderTextColor={'grey'}/>
+      ]} multiline={true} {...props} placeholderTextColor={'grey'} />
     </View>
   )
 }
