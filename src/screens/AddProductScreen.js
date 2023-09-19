@@ -8,6 +8,11 @@ import SelectDropdown from "react-native-select-dropdown";
 import { categoryList } from "../../data/Data";
 import realm from "../../store/realm";
 
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen-hooks";
+
 const AddProductScreen = () => {
 
   const [productData, setProductData] = useState({
@@ -102,7 +107,7 @@ const AddProductScreen = () => {
           <TouchableOpacity style={styles.imageButton} onPress={() => addImage()}>
             {
               productData.imagePath !== "" ?
-                <Image style={{ width: 200, height: 200 }}
+                <Image style={{ width: wp('50%'), height: wp('50%') }}
                        source={{ uri: productData.imagePath }} /> :
                 <View>
                   <Icon name={"images"} type={"entypo"} />
@@ -199,8 +204,8 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   imageButton: {
-    width: 200,
-    height: 200,
+    width: wp('50%'),
+height: wp('50%'),
     borderWidth: 0.5,
     justifyContent: "center",
     alignItems: "center",
@@ -210,7 +215,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   sellerText: {
-    fontSize: 18,
+    fontSize:hp('2.5%'),
     fontWeight: "bold",
     marginTop: 16,
     marginLeft: 8,
@@ -236,12 +241,12 @@ const styles = StyleSheet.create({
   selectDropdown: {
     borderRadius: 10,
     backgroundColor: 'skyblue',
-  width: 150,
-    height: 30,
+    width: wp('40%'),
+height: hp('4%'),
     marginLeft: 8
   },
   selectText: {
-    fontSize: 12
+    fontSize: hp('1.5%'),
   }
 });
 

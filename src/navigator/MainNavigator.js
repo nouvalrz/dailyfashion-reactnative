@@ -6,6 +6,7 @@ import HomeScreen from "../screens/HomeScreen";
 import AddProductScreen from "../screens/AddProductScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import ShowProductScreen from "../screens/ShowProductScreen";
+import ImageZoomScreen from "../screens/ImageZoomScreen";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -51,6 +52,10 @@ const MainNavigator = () => {
           options={{title: "Product", headerTitleAlign: "center", headerStyle:{
             backgroundColor: "#D1E5C2"
             }}} />
+        <Stack.Screen
+          name={"ImageZoom"}
+          component={ImageZoomScreen}
+          options={{headerShown: false}} />
       </Stack.Navigator>
     </NavigationContainer>
   )

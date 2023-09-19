@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { FlatList, StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View, Image, Linking } from "react-native";
 import { Icon } from "react-native-elements";
 import realm from "../../store/realm";
 import { MediaComponent } from "../components/MediaComponent";
@@ -35,6 +35,16 @@ const ShowProductScreen = (props) => {
     setIsBuy(true);
   };
 
+  const onClickMedia = (type) =>{
+    if(type==="whatsapp"){
+      Linking.openURL(`https://wa.me/${contact.phoneNumber}`)
+    }else if(type === 'instagram'){
+      Linking.openURL(`https://instagram.com/${contact.instagram}`)
+    }else if(type==="facebook"){
+      Linking.openURL(`https://m.me/${contact.facebook}`)
+    }
+  }
+
   useEffect(() => {
     const productPage = navigation.addListener("focus", () => {
       collectData();
@@ -50,7 +60,9 @@ const ShowProductScreen = (props) => {
                   return (
                     <TouchableOpacity style={styles.itemButton}>
                       <View style={styles.productContainer}>
-                        <Image style={styles.image} source={{ uri: item.imagePath }} />
+                        <TouchableOpacity onPress={()=>navigation.navigate("ImageZoom", {imagePath: item.imagePath})}>
+                          <Image style={styles.image} source={{ uri: item.imagePath }} />
+                        </TouchableOpacity>
                         <View style={styles.textContainer}>
                           <Text style={styles.title}>{item.productName}</Text>
                           <Text style={styles.text}>{item.description}</Text>
@@ -84,15 +96,15 @@ const ShowProductScreen = (props) => {
               </Text>
               {
                 contact.phoneNumber != '' ?
-                  <MediaComponent source={require('../../assets/images/whatsapp.png')} value={contact.phoneNumber} /> : null
+                  <MediaComponent source={require('../../assets/images/whatsapp.png')} value={contact.phoneNumber} onPress={()=>onClickMedia("whatsapp")} /> : null
               }
               {
                 contact.instagram != '' ?
-                  <MediaComponent source={require('../../assets/images/instagram.png')} value={contact.instagram} /> : null
+                  <MediaComponent source={require('../../assets/images/instagram.png')} value={contact.instagram} onPress={()=>onClickMedia("instagram")}  /> : null
               }
               {
                 contact.facebook != '' ?
-                  <MediaComponent source={require('../../assets/images/facebook.png')} value={contact.facebook} /> : null
+                  <MediaComponent source={require('../../assets/images/facebook.png')} value={contact.facebook} onPress={()=>onClickMedia("facebook")}  /> : null
               }
             </View>
           </View>
@@ -125,8 +137,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   image: {
-    width: 100,
-    height: 100,
+    width: wp('25%'),
+height: wp('25%')
   },
   textContainer: {
     flex: 1,
@@ -135,12 +147,12 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "black",
-    fontSize: 18,
+    fontSize: hp('2.5%'),
     fontWeight: "bold",
   },
   text: {
     color: "black",
-    fontSize: 16,
+    fontSize: hp('2%')
   },
   modalContainer: {
     backgroundColor: "rgba(255,255,255,0.9)",
