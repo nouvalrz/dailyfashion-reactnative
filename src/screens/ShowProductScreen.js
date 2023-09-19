@@ -4,6 +4,7 @@ import { FlatList, StyleSheet, Text, TouchableOpacity, View, Image, Linking } fr
 import { Icon } from "react-native-elements";
 import realm from "../../store/realm";
 import { MediaComponent } from "../components/MediaComponent";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen-hooks";
 
 const ShowProductScreen = (props) => {
 
@@ -58,7 +59,7 @@ const ShowProductScreen = (props) => {
       <FlatList data={data} contentContainerStyle={styles.flatListContainer} keyExtractor={(item) => item.id}
                 renderItem={({ item }) => {
                   return (
-                    <TouchableOpacity style={styles.itemButton}>
+                    <TouchableOpacity style={styles.itemButton} onPress={()=>navigation.navigate('EditProduct', {idProduct: item.id})}>
                       <View style={styles.productContainer}>
                         <TouchableOpacity onPress={()=>navigation.navigate("ImageZoom", {imagePath: item.imagePath})}>
                           <Image style={styles.image} source={{ uri: item.imagePath }} />
